@@ -6,8 +6,4 @@ import (
 
 func main() {
 	fmt.Println("Hej det git er sat op!")
-
-	// Starte programmet 
-
-	//
 }
