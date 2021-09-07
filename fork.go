@@ -4,6 +4,6 @@ import (
 	"fmt"
 )
 
-func main() {
+func fork() {
 	fmt.Println("Hej det git er sat op!")
 }
