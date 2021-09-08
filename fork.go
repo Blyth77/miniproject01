@@ -2,23 +2,27 @@ package main
 
 import (
 	"fmt"
+	"sync"
 )
 
 // template - skal ændres på et tidspunkt
-func fork() {
-	var count int
-	var state bool
+
+type Fork struct{
+	var times_used int
+	var status bool
+	sync.Mutex
 }
 
-func in_use() {
+
+func takeFork() {
 	state = true
-	count++
+	counter++
 }
 
-func free() {
-	state = false
+func status() bool {
+	return status
 }
 
-func status() {
-	fmt.Printf("%s, %s\n", count, state)
+func showStatus() {
+	fmt.Printf("%s, %s\n", counter, state)
 }
