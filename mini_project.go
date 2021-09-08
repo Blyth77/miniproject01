@@ -9,6 +9,7 @@ func main() {
 
 	// DECLARE:
 	// Array med philosopher 
+	
 
 	// Array med forks
 
