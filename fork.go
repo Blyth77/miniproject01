@@ -9,7 +9,7 @@ import (
 
 type Fork struct{
 	var times_used int
-	var status bool
+	var in_use bool
 	sync.Mutex
 }
 

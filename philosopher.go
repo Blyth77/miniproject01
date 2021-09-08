@@ -14,7 +14,10 @@ type Phil struct{
 
 func eating(p Phil) {
 	p.left_fork.Lock()
+	p.showForkPickUp(left_fork)
+
 	p.right_fork.Lock()
+	p.showForkPickUp(right_fork)
 
 	p.times_eaten++
 	p.status = "eating"
@@ -27,6 +30,10 @@ func eating(p Phil) {
 
 	p.status = "thinking"
 	p.showStatus()
+}
+
+func showForkPickUp(fork Fork){
+	fmt.Printf("%s, %s\n", "Picked up: ", fork)
 }
 
 // id is..
