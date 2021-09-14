@@ -1,28 +1,27 @@
 package main
 
 import (
-	"fmt"
-	"sync"
+	// "fmt"
 )
 
-// template - skal ændres på et tidspunkt
+func fork(chInLeft, chOutLeft, chInRight, chOutRight chan (int)) {
+	timesUsed := 0
 
-type Fork struct{
-	var times_used int
-	var in_use bool
-	sync.Mutex
-}
-
-
-func takeFork() {
-	state = true
-	counter++
-}
-
-func status() bool {
-	return status
-}
-
-func showStatus() {
-	fmt.Printf("%s, %s\n", counter, state)
+	for {
+		// Receive request 
+		select {
+			case <-chInLeft:
+				{
+					chOutLeft <- 1 	// Recive READY-msg
+					<-chInLeft // Sends DONE-msg
+				}
+			// Other side
+			case <-chInRight:
+				{
+					chOutRight <- 1
+					<-chInRight
+				}
+		}
+		timesUsed++
+	}
 }

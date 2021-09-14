@@ -5,38 +5,60 @@ import (
 	"time"
 )
 
-type Phil struct{
-	var id int
-	var times_eaten int
-	var status string
-	var left_fork, right_fork *Fork
+/* 
+A PHILOSOPHER uses 2 channels to recive one fork, 1 channel for recieving commands and a name.
+*/
+func philosopher(chInLeft, chOutLeft, chInRight, chOutRight, channelInput chan (int), name string) {
+	timesEaten := 0
+	status := "thinking"
+
+	for {
+		// CHECK if a command is incoming
+		philMessages(channelInput, name, timesEaten, status)
+		
+		// THINKING:
+		time.Sleep(2 * time.Second) 
+		//fmt.Printf("%s is thinking\n-----------------\n", name) // TEST
+
+
+		// Try to EAT:
+		takeFork(chOutLeft)
+		takeFork(chOutRight)
+
+
+		// CHECK if a command is INCOMING
+		philMessages(channelInput, name, timesEaten, status)
+
+		// EATING:
+		status = "eating"
+		// fmt.Printf("%s is eating\n", name) // TEST
+		time.Sleep(2 * time.Second) // Sleep
+		timesEaten++
+		putDownForks(chOutLeft, chOutRight) // Sends "done"-msg
+		status = "thinking"
+		// fmt.Printf("%s has eaten\n", name) // TEST
+	}
 }
 
-func eating(p Phil) {
-	p.left_fork.Lock()
-	p.showForkPickUp(left_fork)
-
-	p.right_fork.Lock()
-	p.showForkPickUp(right_fork)
-
-	p.times_eaten++
-	p.status = "eating"
-	p.showStatus()
-
-	time.Sleep(time.Second)
-
-	p.left_fork.Unlock()
-	p.right_fork.Unlock()
-
-	p.status = "thinking"
-	p.showStatus()
+func takeFork(fork chan(int)) {
+	fork <- 1 // Sends request
+	<-fork 	// Recieve rdy
 }
 
-func showForkPickUp(fork Fork){
-	fmt.Printf("%s, %s\n", "Picked up: ", fork)
+func putDownForks(fork1, fork2 chan(int)) {
+	fork1 <- 1
+	fork2 <- 1
 }
 
-// id is..
-func showStatus() {
-	fmt.Printf("%s, %s\n", times_eaten, status)
+func philMessages(channelOutput chan (int), name string, timesEaten int, status string) {
+	select {
+		case x := <-channelOutput: // A msg IS incoming!
+			if x == 1 {
+				fmt.Printf("Phil %s is %s\n", name, status)
+			} else if x == 2 {
+				fmt.Printf("Phil%s has eaten %d time(s)!\n", name, timesEaten)
+			}
+		default:
+			// STOP blocking - if no msg is incoming
+	}
 }
