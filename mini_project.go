@@ -3,9 +3,27 @@ package main
 import (
 	"fmt"
 	"time"
+	"os"
 )
 
 func main() {
+	openingMsg()
+	
+	for {
+		var inputKey string
+		fmt.Scan(&inputKey)
+		if inputKey == "s" {
+			break
+		} else {
+			fmt.Println("Not understood? Please try again!")
+		}
+
+	}
+
+
+
+
+
 	// Fork1
 	chan1, chan2, chan3, chan4 := make(chan int), make(chan int), make(chan int), make(chan int)
 
@@ -38,7 +56,6 @@ func main() {
 
 	fmt.Println("Dinners served!!")
 
-
 	go readFromInput(phil1, phil2, phil3, phil4, phil5)
 
 	for {
@@ -47,28 +64,64 @@ func main() {
 
 }
 
+func openingMsg() {
+	fmt.Println("Welcome to the PHILOSOPHERS DINNER! :D :D :D\n")
+	fmt.Println("To START the \"dinner\" press the 's'-key!")
+	fmt.Println("To ENDs the \"dinner\" press the 'q'-key!\n")
+	fmt.Println("If you want to ask a philosopher something, press the corresponding key!: " )
+	fmt.Println(" '1' ---  PHILOSOPHER ONE")
+	fmt.Println(" '2' ---  PHILOSOPHER TWO")
+	fmt.Println(" '3' ---  PHILOSOPHER THREE")
+	fmt.Println(" '4' ---  PHILOSOPHER FOUR")
+	fmt.Println(" '5' ---  PHILOSOPHER FIVE")
+	fmt.Println("NOTE: all commands are followed by 'ENTER'!")
+}
+
 func readFromInput(phil1, phil2, phil3, phil4, phil5 chan (int)) {
-	var typeOf, idPhil, msg string
+	for {
+		var input string
 
-	fmt.Scan(&typeOf)
-	fmt.Scan(&idPhil)
-	fmt.Scan(&msg)
+		fmt.Scan(&input)
 
-	if typeOf == "phil" {
-		switch idPhil {
-		case "1":
-			phil1 <- 1
-		case "2":
-			phil2 <- 1
-		case "3":
-			phil3 <- 1
-		case "4":
-			phil4 <- 1
-		case "5":
-			phil5 <- 1
-		default:
-			break
+		switch input {
+			case "1":
+				philMsg("ONE", phil1)
+			case "2":
+				philMsg("TWO", phil2)
+			case "3":
+				philMsg("THREE", phil3)
+			case "4":
+				philMsg("FOUR", phil4)
+			case "5":
+				philMsg("FIVE", phil5)
+			case "q":
+				exit()
+			default:
+				break
 		}
+	}
+}
+
+func exit() {
+	fmt.Printf("\nDinner has ended!!!\n")
+	os.Exit(1)
+}
+
+func philMsg(name string, channel chan (int)) {
+	fmt.Printf("PHILOSOPHER %s is listening!\n", name)
+	fmt.Println("Type 'e' to ask how many times he has eaten.")
+	fmt.Println(" -or type 's' to ask his status.")
+
+
+	var command string
+	fmt.Scan(&command)
+	switch command {
+	case "s":
+		channel <- 1
+	case "e":
+		channel <- 2
+	case "q":
+		exit()
 	}
 }
 
@@ -107,7 +160,7 @@ func phil(chInLeft, chOutLeft, chInRight, chOutRight, channelInput chan (int), n
 	for {
 		philMessages(channelInput, name, timesEaten, status)
 
-		fmt.Printf("%s is thinking\n-----------------\n", name)
+		//fmt.Printf("%s is thinking\n-----------------\n", name)
 		time.Sleep(2 * time.Second)
 
 		// Sends request
@@ -119,14 +172,15 @@ func phil(chInLeft, chOutLeft, chInRight, chOutRight, channelInput chan (int), n
 		// Asks the other side
 		chOutRight <- 1
 		<-chInRight
-		fmt.Printf("%s is eating\n", name)
+		// fmt.Printf("%s is eating\n", name)
 		status = "eating"
+		philMessages(channelInput, name, timesEaten, status)
 
 		// Routine sleeps for 2 seconds
 		time.Sleep(2 * time.Second)
 
 		timesEaten++
-		fmt.Printf("%s has eaten\n", name)
+		// fmt.Printf("%s has eaten\n", name)
 
 		// Sends "done"-msg
 		chOutLeft <- 1
@@ -140,9 +194,9 @@ func philMessages(channelOutput chan (int), name string, timesEaten int, status 
 	select {
 	case x := <-channelOutput:
 		if x == 1 {
-			fmt.Printf("Phil%s is %s", name, status)
+			fmt.Printf("Phil %s is %s\n", name, status)
 		} else if x == 2 {
-			fmt.Printf("Phil%s has eaten %s times!", name, timesEaten)
+			fmt.Printf("Phil%s has eaten %d time(s)!\n", name, timesEaten)
 		}
 	default:
 	}
