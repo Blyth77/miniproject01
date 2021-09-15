@@ -43,16 +43,16 @@ func main() {
 
 
 	// Init all ROUTINES
-	go fork(chan1, chan2, chan3, chan4)
-	go fork(chan5, chan6, chan7, chan8)
-	go fork(chan9, chan10, chan11, chan12)
-	go fork(chan13, chan14, chan15, chan16)
-	go fork(chan17, chan18, chan19, chan20)
-	go philosopher(chan20, chan19, chan2, chan1, phil1, "One")
-	go philosopher(chan4, chan3, chan6, chan5, phil2, "Two")
-	go philosopher(chan8, chan7, chan10, chan9, phil3, "Three")
-	go philosopher(chan12, chan11, chan14, chan13, phil4, "Four")
-	go philosopher(chan18, chan17, chan16, chan15, phil5, "Five") // Turned around - to avoid a DeadLocks
+	go Fork(chan1, chan2, chan3, chan4)
+	go Fork(chan5, chan6, chan7, chan8)
+	go Fork(chan9, chan10, chan11, chan12)
+	go Fork(chan13, chan14, chan15, chan16)
+	go Fork(chan17, chan18, chan19, chan20)
+	go Philosopher(chan20, chan19, chan2, chan1, phil1, "One")
+	go Philosopher(chan4, chan3, chan6, chan5, phil2, "Two")
+	go Philosopher(chan8, chan7, chan10, chan9, phil3, "Three")
+	go Philosopher(chan12, chan11, chan14, chan13, phil4, "Four")
+	go Philosopher(chan18, chan17, chan16, chan15, phil5, "Five") // Turned around - to avoid a DeadLocks
 
 	// Dinners STARTING MSG -- program is now runnning
 	fmt.Println("DINNERS SERVED!!")
@@ -88,7 +88,6 @@ func readFromInput(phil1, phil2, phil3, phil4, phil5 chan (int)) {
 				exit() // Program exit
 			default:
 				fmt.Println("Command not understood. Please try again!")
-				break 
 		}
 	}
 }
@@ -100,16 +99,23 @@ func philMsg(name string, channel chan (int)) {
 	fmt.Println(" -or type 's' to ask his status.")
 
 	// WAIT for and RESPOND to phils command
+	var msgSendSucces bool
 	var command string
 	fmt.Scan(&command)
-
-	switch command {
-		case "s":
-			channel <- 1 // Status
-		case "e":
-			channel <- 2 // TimesEaten
-		case "q":
-			exit()
+	for {
+		switch command {
+			case "s":
+				channel <- 1 // Status
+				msgSendSucces = true
+			case "e":
+				channel <- 2 // TimesEaten
+				msgSendSucces = true
+			case "q":
+				exit()
+			default:
+				fmt.Println("Command not understood. Please try again!")
+		}
+		if(msgSendSucces) { break }
 	}
 }
 

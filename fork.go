@@ -4,7 +4,7 @@ import (
 	// "fmt"
 )
 
-func fork(chInLeft, chOutLeft, chInRight, chOutRight chan (int)) {
+func Fork(chInLeft, chOutLeft, chInRight, chOutRight chan (int)) {
 	timesUsed := 0
 
 	for {

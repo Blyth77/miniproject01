@@ -8,7 +8,7 @@ import (
 /* 
 A PHILOSOPHER uses 2 channels to recive one fork, 1 channel for recieving commands and a name.
 */
-func philosopher(chInLeft, chOutLeft, chInRight, chOutRight, channelInput chan (int), name string) {
+func Philosopher(chInLeft, chOutLeft, chInRight, chOutRight, channelInput chan (int), name string) {
 	timesEaten := 0
 	status := "thinking"
 
@@ -22,27 +22,26 @@ func philosopher(chInLeft, chOutLeft, chInRight, chOutRight, channelInput chan (
 
 
 		// Try to EAT:
-		takeFork(chOutLeft)
-		takeFork(chOutRight)
-
+		takeFork(chInLeft, chOutLeft)
+		takeFork(chInRight, chOutRight)
 
 		// CHECK if a command is INCOMING
 		philMessages(channelInput, name, timesEaten, status)
 
 		// EATING:
 		status = "eating"
-		// fmt.Printf("%s is eating\n", name) // TEST
+		//fmt.Printf("%s is eating\n", name) // TEST
 		time.Sleep(2 * time.Second) // Sleep
 		timesEaten++
 		putDownForks(chOutLeft, chOutRight) // Sends "done"-msg
 		status = "thinking"
-		// fmt.Printf("%s has eaten\n", name) // TEST
+		//fmt.Printf("%s has eaten\n", name) // TEST
 	}
 }
 
-func takeFork(fork chan(int)) {
-	fork <- 1 // Sends request
-	<-fork 	// Recieve rdy
+func takeFork(forkIn, forkOut chan(int)) {
+	forkOut <- 1 // Sends request
+	<-forkIn 	// Recieve rdy
 }
 
 func putDownForks(fork1, fork2 chan(int)) {
@@ -59,6 +58,6 @@ func philMessages(channelOutput chan (int), name string, timesEaten int, status 
 				fmt.Printf("Phil%s has eaten %d time(s)!\n", name, timesEaten)
 			}
 		default:
-			// STOP blocking - if no msg is incoming
+			// Stop blocking - if no msg is incoming
 	}
 }
