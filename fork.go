@@ -14,7 +14,7 @@ func Fork(chInLeft, chOutLeft, chInRight, chOutRight chan (int)) {
 				{
 					chOutLeft <- 1 	// Recive READY-msg
 					<-chInLeft // Sends DONE-msg
-				}
+				}	
 			// Other side
 			case <-chInRight:
 				{

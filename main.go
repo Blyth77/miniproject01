@@ -100,9 +100,11 @@ func philMsg(name string, channel chan (int)) {
 
 	// WAIT for and RESPOND to phils command
 	var msgSendSucces bool
-	var command string
-	fmt.Scan(&command)
+	
 	for {
+		var command string
+		fmt.Scan(&command)
+		
 		switch command {
 			case "s":
 				channel <- 1 // Status

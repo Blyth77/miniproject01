@@ -30,12 +30,12 @@ func Philosopher(chInLeft, chOutLeft, chInRight, chOutRight, channelInput chan (
 
 		// EATING:
 		status = "eating"
-		//fmt.Printf("%s is eating\n", name) // TEST
+		// fmt.Printf("%s is eating\n", name) // TEST
 		time.Sleep(2 * time.Second) // Sleep
 		timesEaten++
 		putDownForks(chOutLeft, chOutRight) // Sends "done"-msg
 		status = "thinking"
-		//fmt.Printf("%s has eaten\n", name) // TEST
+		// fmt.Printf("%s has eaten\n", name) // TEST
 	}
 }
 
