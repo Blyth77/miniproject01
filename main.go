@@ -7,6 +7,7 @@ import (
 
 func main() {
 	openingMsg()
+	helpMsg()
 
 	// WAIT for PROGRAM-START or exit
 	for {
@@ -40,30 +41,34 @@ func main() {
 	chan17, chan18, chan19, chan20 := make(chan int), make(chan int), make(chan int), make(chan int)
 
 	// Phil's COMMAND-INPUT channels.
-	phil1, phil2, phil3, phil4, phil5 := make(chan int), make(chan int), make(chan int), make(chan int), make(chan int)
-
+	philIn1, philIn2, philIn3, philIn4, philIn5 := make(chan int, 10), make(chan int, 10), make(chan int, 10), make(chan int, 10), make(chan int, 10)
+	// Phil output
+	philOut1, philOut2, philOut3, philOut4, philOut5 := make(chan string, 10), make(chan string, 10), make(chan string, 10), make(chan string, 10), make(chan string, 10)
 	// Fork's COMMAND-INPUT channels.
-	fork1, fork2, fork3, fork4, fork5 := make(chan int), make(chan int), make(chan int), make(chan int), make(chan int)
+	forkIn1, forkIn2, forkIn3, forkIn4, forkIn5 := make(chan int, 10), make(chan int, 10), make(chan int, 10), make(chan int, 10), make(chan int, 10)
+
+	// Fork output
+	forkOut1, forkOut2, forkOut3, forkOut4, forkOut5 := make(chan string, 10), make(chan string, 10), make(chan string, 10), make(chan string, 10), make(chan string, 10)
 
 	// Init all ROUTINES
-	go Fork(chan1, chan2, chan3, chan4, fork1, "A")
-	go Fork(chan5, chan6, chan7, chan8, fork2, "B")
-	go Fork(chan9, chan10, chan11, chan12, fork3, "C")
-	go Fork(chan13, chan14, chan15, chan16, fork4, "D")
-	go Fork(chan17, chan18, chan19, chan20, fork5, "E")
-	go Philosopher(chan20, chan19, chan2, chan1, phil1, "One")
-	go Philosopher(chan4, chan3, chan6, chan5, phil2, "Two")
-	go Philosopher(chan8, chan7, chan10, chan9, phil3, "Three")
-	go Philosopher(chan12, chan11, chan14, chan13, phil4, "Four")
-	go Philosopher(chan18, chan17, chan16, chan15, phil5, "Five") // Turned around - to avoid a DeadLocks
+	go Fork(chan1, chan2, chan3, chan4, forkIn1, forkOut1, "A")
+	go Fork(chan5, chan6, chan7, chan8, forkIn2, forkOut2, "B")
+	go Fork(chan9, chan10, chan11, chan12, forkIn3, forkOut3, "C")
+	go Fork(chan13, chan14, chan15, chan16, forkIn4, forkOut4, "D")
+	go Fork(chan17, chan18, chan19, chan20, forkIn5, forkOut5, "E")
+	go Philosopher(chan20, chan19, chan2, chan1, philIn1, philOut1, "One")
+	go Philosopher(chan4, chan3, chan6, chan5, philIn2, philOut2, "Two")
+	go Philosopher(chan8, chan7, chan10, chan9, philIn3, philOut3, "Three")
+	go Philosopher(chan12, chan11, chan14, chan13, philIn4, philOut4, "Four")
+	go Philosopher(chan18, chan17, chan16, chan15, philIn5, philOut5, "Five") // Turned around - to avoid a DeadLocks
 
 	// Dinners STARTING MSG -- program is now runnning
 	fmt.Println("DINNERS SERVED!!")
 	fmt.Println("------------------------------------------------")
 
 	// Waits for and READS-USER-INPUT
-	go readFromInput(phil1, phil2, phil3, phil4, phil5, fork1, fork2, fork3, fork4, fork5)
-
+	go readFromInput(philIn1, philIn2, philIn3, philIn4, philIn5, forkIn1, forkIn2, forkIn3, forkIn4, forkIn5)
+	go printToTerminal(philOut1, philOut2, philOut3, philOut4, philOut5, forkOut1, forkOut2, forkOut3, forkOut4, forkOut5)
 	for {
 		// Program runs forever, until stopped.
 	}
@@ -102,6 +107,59 @@ func readFromInput(phil1, phil2, phil3, phil4, phil5, fork1, fork2, fork3, fork4
 		default:
 			fmt.Println("Command not understood. Please try again!")
 		}
+	}
+}
+
+func printToTerminal(phil1, phil2, phil3, phil4, phil5, fork1, fork2, fork3, fork4, fork5 chan (string)) {
+	for {
+		var stringToPrint string
+		select {
+		case <-phil1:
+			{
+				stringToPrint = <-phil1
+			}
+		case <-phil2:
+			{
+				stringToPrint = <-phil2
+			}
+		case <-phil3:
+			{
+				stringToPrint = <-phil3
+			}
+		case <-phil3:
+			{
+				stringToPrint = <-phil4
+			}
+		case <-phil4:
+			{
+				stringToPrint = <-phil4
+			}
+		case <-phil5:
+			{
+				stringToPrint = <-phil5
+			}
+		case <-fork1:
+			{
+				stringToPrint = <-fork1
+			}
+		case <-fork2:
+			{
+				stringToPrint = <-fork2
+			}
+		case <-fork3:
+			{
+				stringToPrint = <-fork3
+			}
+		case <-fork4:
+			{
+				stringToPrint = <-fork4
+			}
+		case <-fork5:
+			{
+				stringToPrint = <-fork5
+			}
+		}
+		fmt.Println(stringToPrint)
 	}
 }
 
@@ -197,6 +255,15 @@ func openingMsg() {
 
 	fmt.Println("If you want to ask a fork something, press the corresponding key!: ")
 	fmt.Println("NOTE: all commands are followed by 'ENTER'!")
+}
+
+func helpMsg() {
+	fmt.Print("Start program: s \n \t - followed by enter\n")
+	fmt.Print("Quit program: q \n \t- followed by enter\n \t ")
+	fmt.Print("While program is running: \n Call upon a philosopher, enter no. from 1-5 \n \t - followed by enter \n")
+	fmt.Print("While philosopher is called upon: \n Get philosopher status: s \n \t - followed by enter \n")
+	fmt.Print("Get number of times philosopher has eaten: e \n \t - followed by enter \n")
+	fmt.Print("Get number of times the philosopher has eaten and his status: z \n \t")
 }
 
 func exit() {
