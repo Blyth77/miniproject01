@@ -26,7 +26,6 @@ func Philosopher(chInLeft, chOutLeft, chInRight, chOutRight, channelInput chan (
 		takeFork(chInRight, chOutRight)
 
 		// CHECK if a command is INCOMING
-		philMessages(channelInput, name, timesEaten, status)
 
 		// EATING:
 		status = "eating"
@@ -34,6 +33,7 @@ func Philosopher(chInLeft, chOutLeft, chInRight, chOutRight, channelInput chan (
 		time.Sleep(2 * time.Second) // Sleep
 		timesEaten++
 		putDownForks(chOutLeft, chOutRight) // Sends "done"-msg
+		philMessages(channelInput, name, timesEaten, status)
 		status = "thinking"
 		// fmt.Printf("%s has eaten\n", name) // TEST
 	}
@@ -53,11 +53,17 @@ func philMessages(channelOutput chan (int), name string, timesEaten int, status 
 	select {
 		case x := <-channelOutput: // A msg IS incoming!
 			if x == 1 {
-				fmt.Printf("Phil %s is %s\n", name, status)
+				fmt.Printf("PHILOSOPHER %s is %s\n", name, status)
+				fmt.Printf("PHILOSOPHER %s is not lstening anymore!\n", name)
 			} else if x == 2 {
-				fmt.Printf("Phil%s has eaten %d time(s)!\n", name, timesEaten)
-			}
+				fmt.Printf("PHILOSOPHER %s has eaten %d time(s)!\n", name, timesEaten)
+				fmt.Printf("PHILOSOPHER %s is not listening anymore!\n", name)
+			} else if x == 3 {
+				fmt.Printf("PHILOSOPHER %s is %s and has eaten %d time(s)!\n", name, status, timesEaten)
+				fmt.Printf("PHILOSOPHER %s is not listening anymore!\n", name)
+			} 
 		default:
 			// Stop blocking - if no msg is incoming
 	}
+
 }
