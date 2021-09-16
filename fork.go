@@ -6,4 +6,4 @@ import (
 
 func fork() {
 	fmt.Println("Hej det git er sat op!")
-}
+} // test
