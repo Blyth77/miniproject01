@@ -95,8 +95,11 @@ func readFromInput(phil1, phil2, phil3, phil4, phil5 chan (int)) {
 func philMsg(name string, channel chan (int)) {
 	// Show user options for interaction with a phil
 	fmt.Printf("PHILOSOPHER %s is listening!\n", name)
-	fmt.Println("Type 'e' to ask how many times he has eaten.")
-	fmt.Println(" -or type 's' to ask his status.")
+	fmt.Println("Type a command to ask the philosopher something:")
+	fmt.Println(" - type 's' to ask his status.")
+	fmt.Println(" - type 'e' to ask how many times he has eaten.")
+	fmt.Println(" - type 'a' for all info.")
+
 
 	// WAIT for and RESPOND to phils command
 	var msgSendSucces bool
@@ -104,13 +107,16 @@ func philMsg(name string, channel chan (int)) {
 	for {
 		var command string
 		fmt.Scan(&command)
-		
+
 		switch command {
 			case "s":
 				channel <- 1 // Status
 				msgSendSucces = true
 			case "e":
 				channel <- 2 // TimesEaten
+				msgSendSucces = true
+			case "a":
+				channel <- 3 // TimesEaten
 				msgSendSucces = true
 			case "q":
 				exit()
