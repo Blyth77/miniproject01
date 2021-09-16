@@ -13,7 +13,7 @@ func Philosopher(chInLeft, chOutLeft, chInRight, chOutRight, channelInput chan (
 	status := "thinking"
 
 	for {
-		// CHECK if a command is incoming
+		// CHECK if a query is incoming
 		philMessages(channelInput, channelOutput, name, timesEaten, status)
 		// THINKING:
 		time.Sleep(2 * time.Second)
@@ -29,7 +29,7 @@ func Philosopher(chInLeft, chOutLeft, chInRight, chOutRight, channelInput chan (
 		time.Sleep(2 * time.Second) // Sleep
 		timesEaten++
 		putDownForks(chOutLeft, chOutRight) // Sends "done"-msg
-		// CHECK if a command is INCOMING
+		// CHECK if a query is INCOMING
 		philMessages(channelInput, channelOutput, name, timesEaten, status)
 		status = "thinking"
 		// fmt.Printf("%s has eaten\n", name) // TEST
@@ -48,19 +48,19 @@ func putDownForks(fork1, fork2 chan (int)) {
 
 func philMessages(channelInput chan (int), channelOutput chan (string), name string, timesEaten int, status string) {
 	select {
-	case x := <-channelInput: // A msg IS incoming!
-		if x == 1 {
-			channelOutput <- fmt.Sprintf("PHILOSOPHER %s is %s\n PHILOSOPHER %s is not lstening anymore!\n", name, status, name)
-			channelOutput <- fmt.Sprintf("PHILOSOPHER %s is not lstening anymore!\n", name)
-		} else if x == 2 {
-			channelOutput <- fmt.Sprintf("PHILOSOPHER %s has eaten %d time(s)!\n", name, timesEaten)
-			channelOutput <- fmt.Sprintf("PHILOSOPHER %s is not listening anymore!\n", name)
-		} else if x == 3 {
-			channelOutput <- fmt.Sprintf("PHILOSOPHER %s is %s and has eaten %d time(s)!\n", name, status, timesEaten)
-			channelOutput <- fmt.Sprintf("PHILOSOPHER %s is not listening anymore!\n", name)
-		}
-	default:
-		// Stop blocking - if no msg is incoming
+		case x := <-channelInput: // A msg IS incoming!
+			if x == 1 {
+				channelOutput <- "" // Signals select-block to expect a msg on the channel.
+				channelOutput <- fmt.Sprintf("PHILOSOPHER %s is %s\nPHILOSOPHER %s is not listening anymore!\n", name, status, name)
+			} else if x == 2 {
+				channelOutput <- "" 
+				channelOutput <- fmt.Sprintf("PHILOSOPHER %s has eaten %d time(s)!\nPHILOSOPHER %s is not listening anymore!\n", name, timesEaten, name)
+			} else if x == 3 {
+				channelOutput <- "" 
+				channelOutput <- fmt.Sprintf("PHILOSOPHER %s is %s and has eaten %d time(s)!\nPHILOSOPHER %s is not listening anymore!\n", name, status, timesEaten, name)
+			}
+		default:
+			// Stop blocking - if no msg is incoming
 	}
 
 }

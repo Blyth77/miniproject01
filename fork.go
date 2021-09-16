@@ -9,46 +9,46 @@ func Fork(chInLeft, chOutLeft, chInRight, chOutRight, channelInput chan (int), c
 	status := "free"
 
 	for {
-		// CHECK if a command is INCOMING
-		forkMessages(channelInput, id, timesUsed, status)
+		// CHECK if a query is INCOMING
+		forkMsg(channelInput, channelOutput, id, timesUsed, status)
 
 		// Receive request
 		select {
-		case <-chInLeft:
-			{
-				chOutLeft <- 1 // Recive READY-msg
-				status = "in use"
-				<-chInLeft // Sends DONE-msg
-			}
-		// Other side
-		case <-chInRight:
-			{
-				chOutRight <- 1
-				status = "in use"
-				<-chInRight
-			}
+			case <-chInLeft:
+				{
+					chOutLeft <- 1 // Send READY-msg
+					status = "in use"
+					<-chInLeft // Recieve DONE-msg
+				}
+			// Other side
+			case <-chInRight:
+				{
+					chOutRight <- 1
+					status = "in use"
+					<-chInRight
+				}
 		}
-		// CHECK if a command is INCOMING
-		forkMessages(channelInput, id, timesUsed, status)
+		// CHECK if a query is INCOMING
+		forkMsg(channelInput, channelOutput, id, timesUsed, status)
 		status = "free"
 		timesUsed++
 	}
 }
 
-func forkMessages(channelOutput chan (int), id string, timesUsed int, status string) {
+func forkMsg(channelInput chan (int), channelOutput chan (string), id string, timesUsed int, status string) {
 	select {
-	case x := <-channelOutput: // A msg IS incoming!
-		if x == 1 {
-			fmt.Printf("FORK %s is %s\n", id, status)
-			fmt.Printf("FORK %s is not listening anymore!\n", id)
-		} else if x == 2 {
-			fmt.Printf("FORK %s has been used %d time(s)!\n", id, timesUsed)
-			fmt.Printf("FORK %s is not listening anymore!\n", id)
-		} else if x == 3 {
-			fmt.Printf("FORK %s is %s and has been used %d time(s)!\n", id, status, timesUsed)
-			fmt.Printf("FORK %s is not listening anymore!\n", id)
-		}
-	default:
-		// Stop blocking - if no msg is incoming
+		case x := <-channelInput: // A msg IS incoming!
+			if x == 1 {
+				channelOutput <- "" // Signals select-block to expect a msg on the channel.
+				channelOutput <- fmt.Sprintf("FORK %s is %s\nFORK %s is not listening anymore!\n", id, status, id)
+			} else if x == 2 {
+				channelOutput <- ""
+				channelOutput <- fmt.Sprintf("FORK %s has been used %d time(s)!\nFORK %s is not listening anymore!\n", id, timesUsed, id)
+			} else if x == 3 {
+				channelOutput <- ""
+				channelOutput <- fmt.Sprintf("FORK %s is %s and has been used %d time(s)!\nFORK %s is not listening anymore!\n", id, status, timesUsed, id)
+			}
+		default:
+			// Stop blocking - if no msg is incoming
 	}
 }
