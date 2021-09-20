@@ -252,7 +252,27 @@ func forkQueryOptions(id string) string {
 		fmt.Sprintf("FORK %s is listening!\n", id) +
 		"Type a query to ask the fork something:\n" +
 		" - type 's' to ask its status." +
-		" - type 'e' to ask how many times it has used.\n" +
+		" - type 'e' to ask how many times it has been used.\n" +
+		" - type 'z' for all info.\n" +
+		"------------------------------------------------\n"
+}
+
+func allPhilQueryOptions() string {
+	return "------------------------------------------------\n" +
+		fmt.Sprintf("All PHILOSOPHERS are listening\n") +
+		"Type a query to ask the philosophers something:\n" +
+		" - type 's' to ask their status." +
+		" - type 'e' to ask how many times they have eaten.\n" +
+		" - type 'z' for all info.\n" +
+		"------------------------------------------------\n"
+}
+
+func allForkQueryOptions() string {
+	return "------------------------------------------------\n" +
+		fmt.Sprintf("All FORKS is listening!\n") +
+		"Type a query to ask the forks something:\n" +
+		" - type 's' to ask their status." +
+		" - type 'e' to ask how many times they have been used.\n" +
 		" - type 'z' for all info.\n" +
 		"------------------------------------------------\n"
 }
