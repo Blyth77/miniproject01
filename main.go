@@ -5,11 +5,15 @@ import (
 	"os"
 )
 
+func getCount() int {
+	return 5
+}
+
 func main() {
 	openingMsg()
 
 	// WAIT for PROGRAM-START or exit
-	startMenu(getUserInput) 
+	startMenu(getUserInput)
 
 	// Init all CHANNELS
 
@@ -50,7 +54,7 @@ func main() {
 
 	// Waits for and READS-USER-INPUT
 	go queryEntityFromInput(getUserInput, philIn1, philIn2, philIn3, philIn4, philIn5, forkIn1, forkIn2, forkIn3, forkIn4, forkIn5)
-	
+
 	// Sends OUTPUT-TO-TERMINAL
 	go outputFromUserQueries(output, philOut1, philOut2, philOut3, philOut4, philOut5, forkOut1, forkOut2, forkOut3, forkOut4, forkOut5)
 
@@ -63,23 +67,25 @@ func startMenu(input func() string) {
 	for {
 		var started bool
 		switch input() {
-			case "s":
-				started = true
-			case "q":
-				exit()
-			case "h":
-				helpMsg()
-			default:
-				output("Query not understood. Please try again!")
+		case "s":
+			started = true
+		case "q":
+			exit()
+		case "h":
+			helpMsg()
+		default:
+			output("Query not understood. Please try again!")
 		}
-		if started { break }
+		if started {
+			break
+		}
 	}
 }
 
 // IN from user
 func getUserInput() string {
 	var input string
-		fmt.Scan(&input)
+	fmt.Scan(&input)
 	return input
 }
 
@@ -92,32 +98,44 @@ func queryEntityFromInput(input func() string, phil1, phil2, phil3, phil4, phil5
 	for {
 		// Choose which PHIL-TO-CONTACT
 		switch input() {
-			case "1":
-				query(input, philQueryOptions, "ONE", phil1)
-			case "2":
-				query(input, philQueryOptions, "TWO", phil2)
-			case "3":
-				query(input, philQueryOptions, "THREE", phil3)
-			case "4":
-				query(input, philQueryOptions, "FOUR", phil4)
-			case "5":
-				query(input, philQueryOptions, "FIVE", phil5)
-			case "a":
-				query(input, forkQueryOptions, "A", fork1)
-			case "b":
-				query(input, forkQueryOptions, "B", fork2)
-			case "c":
-				query(input, forkQueryOptions, "C", fork3)
-			case "d":
-				query(input, forkQueryOptions, "D", fork4)
-			case "e":
-				query(input, forkQueryOptions, "E", fork5)
-			case "q":
-				exit() // Program exit
-			case "h":
-				helpMsg()
-			default:
-				output("Query not understood. Please try again!")
+		case "1":
+			query(input, philQueryOptions, "ONE", phil1)
+		case "2":
+			query(input, philQueryOptions, "TWO", phil2)
+		case "3":
+			query(input, philQueryOptions, "THREE", phil3)
+		case "4":
+			query(input, philQueryOptions, "FOUR", phil4)
+		case "5":
+			query(input, philQueryOptions, "FIVE", phil5)
+		case "a":
+			query(input, forkQueryOptions, "A", fork1)
+		case "b":
+			query(input, forkQueryOptions, "B", fork2)
+		case "c":
+			query(input, forkQueryOptions, "C", fork3)
+		case "d":
+			query(input, forkQueryOptions, "D", fork4)
+		case "e":
+			query(input, forkQueryOptions, "E", fork5)
+		case "z":
+			query(input, philQueryOptions, "ONE", phil1)
+			query(input, philQueryOptions, "TWO", phil2)
+			query(input, philQueryOptions, "THREE", phil3)
+			query(input, philQueryOptions, "FOUR", phil4)
+			query(input, philQueryOptions, "FIVE", phil5)
+
+			query(input, forkQueryOptions, "A", fork1)
+			query(input, forkQueryOptions, "B", fork2)
+			query(input, forkQueryOptions, "C", fork3)
+			query(input, forkQueryOptions, "D", fork4)
+			query(input, forkQueryOptions, "E", fork5)
+		case "q":
+			exit() // Program exit
+		case "h":
+			helpMsg()
+		default:
+			output("Query not understood. Please try again!")
 		}
 	}
 }
@@ -126,26 +144,26 @@ func outputFromUserQueries(queryResponse func(string), phil1, phil2, phil3, phil
 	for {
 		// We use a SELECT-block to order the messages
 		select {
-			case <-phil1:
-				queryResponse( <- phil1 )
-			case <-phil2:
-				queryResponse( <- phil2 )
-			case <-phil3:
-				queryResponse( <- phil3 )
-			case <-phil4:
-				queryResponse( <- phil4 )
-			case <-phil5: 
-				queryResponse( <- phil5 )
-			case <-fork1:
-				queryResponse( <- fork1 )
-			case <-fork2:
-				queryResponse( <- fork2 )
-			case <-fork3:
-				queryResponse( <- fork3 )
-			case <-fork4:
-				queryResponse( <- fork4 )
-			case <-fork5:
-				queryResponse( <- fork5 )
+		case <-phil1:
+			queryResponse(<-phil1)
+		case <-phil2:
+			queryResponse(<-phil2)
+		case <-phil3:
+			queryResponse(<-phil3)
+		case <-phil4:
+			queryResponse(<-phil4)
+		case <-phil5:
+			queryResponse(<-phil5)
+		case <-fork1:
+			queryResponse(<-fork1)
+		case <-fork2:
+			queryResponse(<-fork2)
+		case <-fork3:
+			queryResponse(<-fork3)
+		case <-fork4:
+			queryResponse(<-fork4)
+		case <-fork5:
+			queryResponse(<-fork5)
 		}
 	}
 }
@@ -160,93 +178,94 @@ func query(input func() string, queryOptions func(string) string, id string, cha
 	// WAIT for and RESPOND to entity query
 	for {
 		switch input() {
-			case "s":
-				channel <- 1 // Status
-				validQuery = true
-			case "e":
-				channel <- 2 // Counter
-				validQuery = true
-			case "z":
-				channel <- 3 // All info
-				validQuery = true
-			case "h":
-				queryOptions(id)
-			case "q":
-				exit()
-			default:
-				output("Query not understood. Please try again!")
+		case "s":
+			channel <- 1 // Status
+			validQuery = true
+		case "e":
+			channel <- 2 // Counter
+			validQuery = true
+		case "z":
+			channel <- 3 // All info
+			validQuery = true
+		case "h":
+			queryOptions(id)
+		case "q":
+			exit()
+		default:
+			output("Query not understood. Please try again!")
 		}
-		if validQuery { break } // RESTART if not valid!
+		if validQuery {
+			break
+		} // RESTART if not valid!
 	}
 }
 
-
 // INSTRUCTIONS AND INFO for terminal
 func openingMsg() {
-	output(		"------------------------------------------------\n" +
-					"Welcome to the PHILOSOPHERS DINNER! :D :D :D\n" +
-				"------------------------------------------------\n" +
-				"To START the \"dinner\" press the 's'-key!\n" +
-				"To ENDs the \"dinner\" press the 'q'-key!\n" +
-				"Need help type 'h'!\n" +
-				"------------------------------------------------\n" +
-				"If you want to ask a philosopher something, press the corresponding key!: \n" +
-				" '1' ---  PHILOSOPHER ONE\n" +
-				" '2' ---  PHILOSOPHER TWO\n" +
-				" '3' ---  PHILOSOPHER THREE\n" +
-				" '4' ---  PHILOSOPHER FOUR\n" +
-				" '5' ---  PHILOSOPHER FIVE\n" +
-				"------------------------------------------------\n" +
-				"If you want to ask a fork something, press the corresponding key!: \n" +
-				" 'a' ---  FORK A\n" +
-				" 'b' ---  FORK B\n" +
-				" 'c' ---  FORK C\n" +
-				" 'd' ---  FORK D\n" +
-				" 'e' ---  FORK E\n" +
-				"------------------------------------------------\n" +
-				"NOTE: all queries are followed by 'ENTER'!\n")
+	output("------------------------------------------------\n" +
+		"Welcome to the PHILOSOPHERS DINNER! :D :D :D\n" +
+		"------------------------------------------------\n" +
+		"To START the \"dinner\" press the 's'-key!\n" +
+		"To ENDs the \"dinner\" press the 'q'-key!\n" +
+		"Need help type 'h'!\n" +
+		"------------------------------------------------\n" +
+		"If you want to ask a philosopher something, press the corresponding key!: \n" +
+		" '1' ---  PHILOSOPHER ONE\n" +
+		" '2' ---  PHILOSOPHER TWO\n" +
+		" '3' ---  PHILOSOPHER THREE\n" +
+		" '4' ---  PHILOSOPHER FOUR\n" +
+		" '5' ---  PHILOSOPHER FIVE\n" +
+		"------------------------------------------------\n" +
+		"If you want to ask a fork something, press the corresponding key!: \n" +
+		" 'a' ---  FORK A\n" +
+		" 'b' ---  FORK B\n" +
+		" 'c' ---  FORK C\n" +
+		" 'd' ---  FORK D\n" +
+		" 'e' ---  FORK E\n" +
+		"------------------------------------------------\n" +
+		"NOTE: all queries are followed by 'ENTER'!\n")
 }
 
 func helpMsg() {
-	output( 	"------------------------------------------------\n" +
-				"Start program: s \n \t - followed by enter\n" +
-				"Quit program: q \n \t- followed by enter\n \t " + 
-				"While program is running: \nCall upon a philosopher, enter no. from 1-5 \n \t - followed by enter \n" +
-				"While philosopher is called upon: \nGet philosopher status: s \n \t - followed by enter \n" +
-				"Get number of times philosopher has eaten: e \n \t - followed by enter \n" +
-				"Get number of times the philosopher has eaten and his status: z \n \t" +
-				"------------------------------------------------\n")
+	output("------------------------------------------------\n" +
+		"Start program: s \n \t - followed by enter\n" +
+		"Quit program: q \n \t- followed by enter\n \t " +
+		"While program is running: \nCall upon a philosopher, enter no. from 1-5 \n \t - followed by enter \n" +
+		"While philosopher is called upon: \nGet philosopher status: s \n \t - followed by enter \n" +
+		"Get number of times philosopher has eaten: e \n \t - followed by enter \n" +
+		"Get number of times the philosopher has eaten and his status: z \n \t" +
+		"------------------------------------------------\n")
 }
 
 func philQueryOptions(name string) string {
-	return 		"------------------------------------------------\n" +
-	fmt.Sprintf("PHILOSOPHER %s is listening!\n", name) +
-				"Type a query to ask the philosopher something:\n" +
-				" - type 's' to ask his status.\n" +
-				" - type 'e' to ask how many times he has eaten.\n" +
-				" - type 'z' for all info.\n" +
-				"------------------------------------------------\n" 
+	return "------------------------------------------------\n" +
+		fmt.Sprintf("PHILOSOPHER %s is listening!\n", name) +
+		"Type a query to ask the philosopher something:\n" +
+		" - type 's' to ask his status.\n" +
+		" - type 'e' to ask how many times he has eaten.\n" +
+		" - type 'z' for all info.\n" +
+		"------------------------------------------------\n"
 }
 
 func forkQueryOptions(id string) string {
-	return 		"------------------------------------------------\n" +
-	fmt.Sprintf("FORK %s is listening!\n", id) +
-				"Type a query to ask the fork something:\n" +
-				" - type 's' to ask its status." +
-				" - type 'e' to ask how many times it has used.\n" +
-				" - type 'z' for all info.\n" +
-				"------------------------------------------------\n"
+	return "------------------------------------------------\n" +
+		fmt.Sprintf("FORK %s is listening!\n", id) +
+		"Type a query to ask the fork something:\n" +
+		" - type 's' to ask its status." +
+		" - type 'e' to ask how many times it has used.\n" +
+		" - type 'z' for all info.\n" +
+		"------------------------------------------------\n"
 }
 
 func startMsg() {
-	output( 	"------------------------------------------------\n" +
-				"	DINNERS IS SERVED!!\n" +
-				"------------------------------------------------\n" )
+	output("------------------------------------------------\n" +
+		"	DINNERS IS SERVED!!\n" +
+		"------------------------------------------------\n")
 }
 
 func exit() {
-	output(		"------------------------------------------------\n" +
-				"	Dinner has ended!!!\n" +
-				"------------------------------------------------\n" )
+	output("------------------------------------------------\n" +
+		"	Dinner has ended!!!\n" +
+		"------------------------------------------------\n")
 	os.Exit(0)
 }
