@@ -13,7 +13,7 @@ func Philosopher(chInLeft, chOutLeft, chInRight, chOutRight, channelInput chan (
 	status := "thinking"
 
 	for {
-		// CHECK if a command is incoming
+		// CHECK if a query is INCOMING
 		philMessages(channelInput, channelOutput, name, timesEaten, status)
 		// THINKING:
 		time.Sleep(2 * time.Second)
@@ -29,7 +29,7 @@ func Philosopher(chInLeft, chOutLeft, chInRight, chOutRight, channelInput chan (
 		time.Sleep(2 * time.Second) // Sleep
 		timesEaten++
 		putDownForks(chOutLeft, chOutRight) // Sends "done"-msg
-		// CHECK if a command is INCOMING
+		// CHECK if a query is INCOMING
 		philMessages(channelInput, channelOutput, name, timesEaten, status)
 		status = "thinking"
 		// fmt.Printf("%s has eaten\n", name) // TEST
