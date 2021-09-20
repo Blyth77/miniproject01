@@ -118,18 +118,10 @@ func queryEntityFromInput(input func() string, phil1, phil2, phil3, phil4, phil5
 			query(input, forkQueryOptions, "D", fork4)
 		case "e":
 			query(input, forkQueryOptions, "E", fork5)
-		case "z":
-			query(input, philQueryOptions, "ONE", phil1)
-			query(input, philQueryOptions, "TWO", phil2)
-			query(input, philQueryOptions, "THREE", phil3)
-			query(input, philQueryOptions, "FOUR", phil4)
-			query(input, philQueryOptions, "FIVE", phil5)
-
-			query(input, forkQueryOptions, "A", fork1)
-			query(input, forkQueryOptions, "B", fork2)
-			query(input, forkQueryOptions, "C", fork3)
-			query(input, forkQueryOptions, "D", fork4)
-			query(input, forkQueryOptions, "E", fork5)
+		case "p":
+			queryAllPhil(input, allPhilQueryOptions, phil1, phil2, phil3, phil4, phil5)
+		case "f":
+			queryAllForks(input, allForkQueryOptions, fork1, fork2, fork3, fork4, fork5)
 		case "q":
 			exit() // Program exit
 		case "h":
@@ -166,6 +158,87 @@ func outputFromUserQueries(queryResponse func(string), phil1, phil2, phil3, phil
 			queryResponse(<-fork5)
 		}
 	}
+}
+
+func queryAllPhil(input func() string, QueryOptions func() string, chan1, chan2, chan3, chan4, chan5 chan (int)) {
+
+	output(allPhilQueryOptions())
+
+	var validQuery bool
+
+	for {
+		switch input() {
+		case "s":
+			chan1 <- 1
+			chan2 <- 1
+			chan3 <- 1
+			chan4 <- 1
+			chan5 <- 1
+			validQuery = true
+		case "e":
+			chan1 <- 2
+			chan2 <- 2
+			chan3 <- 2
+			chan4 <- 2
+			chan5 <- 2
+			validQuery = true
+		case "z":
+			chan1 <- 3
+			chan2 <- 3
+			chan3 <- 3
+			chan4 <- 3
+			chan5 <- 3
+			validQuery = true
+		case "q":
+			exit()
+		default:
+			output("Query not understood. Please try again!")
+		}
+		if validQuery {
+			break
+		}
+	}
+}
+
+func queryAllForks(input func() string, QueryOptions func() string, chan1, chan2, chan3, chan4, chan5 chan (int)) {
+
+	output(allForkQueryOptions())
+
+	var validQuery bool
+
+	for {
+		switch input() {
+		case "s":
+			chan1 <- 1
+			chan2 <- 1
+			chan3 <- 1
+			chan4 <- 1
+			chan5 <- 1
+			validQuery = true
+		case "e":
+			chan1 <- 2
+			chan2 <- 2
+			chan3 <- 2
+			chan4 <- 2
+			chan5 <- 2
+			validQuery = true
+		case "z":
+			chan1 <- 3
+			chan2 <- 3
+			chan3 <- 3
+			chan4 <- 3
+			chan5 <- 3
+			validQuery = true
+		case "q":
+			exit()
+		default:
+			output("Query not understood. Please try again!")
+		}
+		if validQuery {
+			break
+		} // RESTART if not valid!
+	}
+
 }
 
 func query(input func() string, queryOptions func(string) string, id string, channel chan (int)) {
