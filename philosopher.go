@@ -50,14 +50,14 @@ func philMessages(channelInput chan (int), channelOutput chan (string), name str
 	select {
 	case x := <-channelInput: // A msg IS incoming!
 		if x == 1 {
-			channelOutput <- fmt.Sprintf("PHILOSOPHER %s is %s\n PHILOSOPHER %s is not lstening anymore!\n", name, status, name)
-			channelOutput <- fmt.Sprintf("PHILOSOPHER %s is not lstening anymore!\n", name)
+			channelOutput <- "" // Signals select-block to expect a msg on the channel.
+			channelOutput <- fmt.Sprintf("PHILOSOPHER %s is %s\nPHILOSOPHER %s is not listening anymore!\n", name, status, name)
 		} else if x == 2 {
-			channelOutput <- fmt.Sprintf("PHILOSOPHER %s has eaten %d time(s)!\n", name, timesEaten)
-			channelOutput <- fmt.Sprintf("PHILOSOPHER %s is not listening anymore!\n", name)
+			channelOutput <- "" 
+			channelOutput <- fmt.Sprintf("PHILOSOPHER %s has eaten %d time(s)!\nPHILOSOPHER %s is not listening anymore!\n", name, timesEaten, name)
 		} else if x == 3 {
-			channelOutput <- fmt.Sprintf("PHILOSOPHER %s is %s and has eaten %d time(s)!\n", name, status, timesEaten)
-			channelOutput <- fmt.Sprintf("PHILOSOPHER %s is not listening anymore!\n", name)
+			channelOutput <- "" 
+			channelOutput <- fmt.Sprintf("PHILOSOPHER %s is %s and has eaten %d time(s)!\nPHILOSOPHER %s is not listening anymore!\n", name, status, timesEaten, name)
 		}
 	default:
 		// Stop blocking - if no msg is incoming
