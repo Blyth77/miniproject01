@@ -169,25 +169,25 @@ func queryAllPhil(input func() string, QueryOptions func() string, chan1, chan2,
 	for {
 		switch input() {
 		case "s":
-			chan1 <- 1
-			chan2 <- 1
-			chan3 <- 1
-			chan4 <- 1
-			chan5 <- 1
+			chan1 <- 4
+			chan2 <- 4
+			chan3 <- 4
+			chan4 <- 4
+			chan5 <- 4
 			validQuery = true
 		case "e":
-			chan1 <- 2
-			chan2 <- 2
-			chan3 <- 2
-			chan4 <- 2
-			chan5 <- 2
+			chan1 <- 5
+			chan2 <- 5
+			chan3 <- 5
+			chan4 <- 5
+			chan5 <- 5
 			validQuery = true
 		case "z":
-			chan1 <- 3
-			chan2 <- 3
-			chan3 <- 3
-			chan4 <- 3
-			chan5 <- 3
+			chan1 <- 6
+			chan2 <- 6
+			chan3 <- 6
+			chan4 <- 6
+			chan5 <- 6
 			validQuery = true
 		case "q":
 			exit()
@@ -209,25 +209,25 @@ func queryAllForks(input func() string, QueryOptions func() string, chan1, chan2
 	for {
 		switch input() {
 		case "s":
-			chan1 <- 1
-			chan2 <- 1
-			chan3 <- 1
-			chan4 <- 1
-			chan5 <- 1
+			chan1 <- 4
+			chan2 <- 4
+			chan3 <- 4
+			chan4 <- 4
+			chan5 <- 4
 			validQuery = true
 		case "e":
-			chan1 <- 2
-			chan2 <- 2
-			chan3 <- 2
-			chan4 <- 2
-			chan5 <- 2
+			chan1 <- 5
+			chan2 <- 5
+			chan3 <- 5
+			chan4 <- 5
+			chan5 <- 5
 			validQuery = true
 		case "z":
-			chan1 <- 3
-			chan2 <- 3
-			chan3 <- 3
-			chan4 <- 3
-			chan5 <- 3
+			chan1 <- 6
+			chan2 <- 6
+			chan3 <- 6
+			chan4 <- 6
+			chan5 <- 6
 			validQuery = true
 		case "q":
 			exit()
