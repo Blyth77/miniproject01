@@ -52,7 +52,7 @@ func putDownForks(fork1, fork2 chan (int)) {
 
 func philMessages(channelInput chan (int), channelOutput chan (string), name string, timesEaten int, status string) {
 	select {
-	case x := <- channelInput: // A msg IS incoming!
+	case x := <-channelInput: // A msg IS incoming!
 		if x == 1 {
 			channelOutput <- "" // Signals select-block to expect a msg on the channel.
 			channelOutput <- fmt.Sprintf("PHILOSOPHER %s is %s\nPHILOSOPHER %s is not listening anymore!\n", name, status, name)
@@ -64,13 +64,13 @@ func philMessages(channelInput chan (int), channelOutput chan (string), name str
 			channelOutput <- fmt.Sprintf("PHILOSOPHER %s is %s and has eaten %d time(s)!\nPHILOSOPHER %s is not listening anymore!\n", name, status, timesEaten, name)
 		} else if x == 4 {
 			channelOutput <- ""
-			channelOutput <- fmt.Sprintf("PHILOSOPHER %s is %s", name, status)
+			channelOutput <- fmt.Sprintf("PHILOSOPHER %s is %s\n", name, status)
 		} else if x == 5 {
 			channelOutput <- ""
-			channelOutput <- fmt.Sprintf("PHILOSOPHER %s has eaten %d time(s)!", name, timesEaten)
+			channelOutput <- fmt.Sprintf("PHILOSOPHER %s has eaten %d time(s)!\n", name, timesEaten)
 		} else if x == 6 {
 			channelOutput <- ""
-			channelOutput <- fmt.Sprintf("PHILOSOPHER %s is %s and has eaten %d time(s)!", name, status, timesEaten)
+			channelOutput <- fmt.Sprintf("PHILOSOPHER %s is %s and has eaten %d time(s)!\n", name, status, timesEaten)
 		}
 	default:
 		// Stop blocking - if no msg is incoming

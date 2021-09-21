@@ -52,8 +52,10 @@ func forkMsg(channelInput chan (int), channelOutput chan (string), id string, ti
 			channelOutput <- fmt.Sprintf("FORK %s is %s\n", id, status)
 		} else if x == 5 {
 			channelOutput <- ""
+			channelOutput <- fmt.Sprintf("FORK %s has been used %d time(s)!\n", id, timesUsed)
 		} else if x == 6 {
 			channelOutput <- ""
+			channelOutput <- fmt.Sprintf("FORK %s is %s and has been used %d time(s)!\n", id, status, timesUsed)
 		}
 	default:
 		// Stop blocking - if no msg is incoming

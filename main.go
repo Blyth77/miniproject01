@@ -288,6 +288,7 @@ func openingMsg() {
 		" '3' ---  PHILOSOPHER THREE\n" +
 		" '4' ---  PHILOSOPHER FOUR\n" +
 		" '5' ---  PHILOSOPHER FIVE\n" +
+		" To contact all philosophers press 'p' \n" +
 		"------------------------------------------------\n" +
 		"If you want to ask a fork something, press the corresponding key!: \n" +
 		" 'a' ---  FORK A\n" +
@@ -295,6 +296,7 @@ func openingMsg() {
 		" 'c' ---  FORK C\n" +
 		" 'd' ---  FORK D\n" +
 		" 'e' ---  FORK E\n" +
+		" To contact all forks press 'f' \n" +
 		"------------------------------------------------\n" +
 		"NOTE: all queries are followed by 'ENTER'!\n")
 }
@@ -307,6 +309,8 @@ func helpMsg() {
 		"While philosopher is called upon: \nGet philosopher status: s \n \t - followed by enter \n" +
 		"Get number of times philosopher has eaten: e \n \t - followed by enter \n" +
 		"Get number of times the philosopher has eaten and his status: z \n \t" +
+		"Get attention of all philosopher: p \n \t - followed by enter\n" +
+		"Get attention of all forks: f \n \t - followed by enter\n" +
 		"------------------------------------------------\n")
 }
 
