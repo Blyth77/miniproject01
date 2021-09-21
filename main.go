@@ -134,7 +134,6 @@ func queryEntityFromInput(input func() string, phil1, phil2, phil3, phil4, phil5
 
 func outputFromUserQueries(queryResponse func(string), phil1, phil2, phil3, phil4, phil5, fork1, fork2, fork3, fork4, fork5 chan (string)) {
 	for {
-		// We use a SELECT-block to order the messages
 		select {
 		case <-phil1:
 			queryResponse(<-phil1)
