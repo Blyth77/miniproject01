@@ -324,7 +324,7 @@ func forkQueryOptions(id string) string {
 	return "------------------------------------------------\n" +
 		fmt.Sprintf("FORK %s is listening!\n", id) +
 		"Type a query to ask the fork something:\n" +
-		" - type 's' to ask its status." +
+		" - type 's' to ask its status.\n" +
 		" - type 'e' to ask how many times it has been used.\n" +
 		" - type 'z' for all info.\n" +
 		"------------------------------------------------\n"
