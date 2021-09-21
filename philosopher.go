@@ -17,6 +17,7 @@ func Philosopher(chInLeft, chOutLeft, chInRight, chOutRight, channelInput chan (
 		philMessages(channelInput, channelOutput, name, timesEaten, status)
 		// THINKING:
 		time.Sleep(2 * time.Second)
+
 		//fmt.Printf("%s is thinking\n-----------------\n", name) // TEST
 
 		// Try to EAT:
@@ -24,7 +25,10 @@ func Philosopher(chInLeft, chOutLeft, chInRight, chOutRight, channelInput chan (
 		takeFork(chInRight, chOutRight)
 
 		// EATING:
+		philMessages(channelInput, channelOutput, name, timesEaten, status)
 		status = "eating"
+		philMessages(channelInput, channelOutput, name, timesEaten, status)
+
 		// fmt.Printf("%s is eating\n", name) // TEST
 		time.Sleep(2 * time.Second) // Sleep
 		timesEaten++
@@ -48,7 +52,7 @@ func putDownForks(fork1, fork2 chan (int)) {
 
 func philMessages(channelInput chan (int), channelOutput chan (string), name string, timesEaten int, status string) {
 	select {
-	case x := <-channelInput: // A msg IS incoming!
+	case x := <- channelInput: // A msg IS incoming!
 		if x == 1 {
 			channelOutput <- "" // Signals select-block to expect a msg on the channel.
 			channelOutput <- fmt.Sprintf("PHILOSOPHER %s is %s\nPHILOSOPHER %s is not listening anymore!\n", name, status, name)
